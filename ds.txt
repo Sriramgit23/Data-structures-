@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_EMAIL_LENGTH 100 // Assuming a maximum length for email content
+#define NUM_EMAILS 5 // Number of emails to check
+
+struct Email {
+    char content[MAX_EMAIL_LENGTH];
+    int isSpam; // 1 for spam, 0 for not spam
+};
+
+// Function to check if an email content contains spam keywords
+int isSpam(const char*content) {
+    // Simple keyword matching for demonstration
+    const char *spamKeywords[] = {"buy", "free", "money", "click here"};
+    int numKeywords = sizeof(spamKeywords) / sizeof(spamKeywords[0]);
+    
+    for (int i = 0; i < numKeywords; ++i) {
+        if (strstr(content, spamKeywords[i]) != NULL) {
+            return 1; // It's spam
+        }
+    }
+    
+    return 0; // Not spam
+}
+
+int main() {
+    struct Email emails[NUM_EMAILS]; // Array to hold emails
+
+    printf("Enter %d emails:\n", NUM_EMAILS);
+    
+    // Read emails from the user
+    for (int i = 0; i < NUM_EMAILS; ++i) {
+        printf("Email %d: ", i + 1);
+        fgets(emails[i].content, sizeof(emails[i].content), stdin);
+        
+        // Remove newline character from fgets input
+        emails[i].content[strcspn(emails[i].content, "\n")] = '\0';
+        
+        // Check if it's spam
+        emails[i].isSpam = isSpam(emails[i].content);
+    }
+    
+    // Print results
+    printf("\nEmail Spam Detection Results:\n");
+    printf("-----------------------------\n");
+    for (int i = 0; i < NUM_EMAILS; ++i) {
+        printf("Email %d:\n%s\n%s\n\n", i + 1, emails[i].content, 
+               emails[i].isSpam ? "SPAM" : "Not spam");
+    }
+    
+    return 0;
+}
